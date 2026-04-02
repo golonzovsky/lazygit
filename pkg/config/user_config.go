@@ -785,9 +785,9 @@ func GetDefaultConfig() *UserConfig {
 			TimeFormat:               "02 Jan 06",
 			ShortTimeFormat:          time.Kitchen,
 			Theme: ThemeConfig{
-				ActiveBorderColor:               []string{"green", "bold"},
+				ActiveBorderColor:               []string{"#52b788", "bold"},
 				SearchingActiveBorderColor:      []string{"cyan", "bold"},
-				InactiveBorderColor:             []string{"default"},
+				InactiveBorderColor:             []string{"#444444"},
 				OptionsTextColor:                []string{"blue"},
 				SelectedLineBgColor:             []string{"blue"},
 				InactiveViewSelectedLineBgColor: []string{"bold"},
