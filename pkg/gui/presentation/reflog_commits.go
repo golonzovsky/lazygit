@@ -40,7 +40,7 @@ func reflogHashColor(cherryPicked, diffed bool) style.TextStyle {
 		return theme.DiffTerminalColor
 	}
 
-	hashColor := style.FgBlue
+	hashColor := mutedBlue
 	if cherryPicked {
 		hashColor = theme.CherryPickedCommitTextStyle
 	}
@@ -65,7 +65,7 @@ func getFullDescriptionDisplayStringsForReflogCommit(c *models.Commit, attrs ref
 
 	return []string{
 		reflogHashColor(attrs.cherryPicked, attrs.diffed).Sprint(c.ShortHash()),
-		style.FgMagenta.Sprint(utils.UnixToDateSmart(attrs.now, c.UnixTimestamp, attrs.timeFormat, attrs.shortTimeFormat)),
+		mutedMagenta.Sprint(utils.UnixToDateSmart(attrs.now, c.UnixTimestamp, attrs.timeFormat, attrs.shortTimeFormat)),
 		theme.DefaultTextColor.Sprint(name),
 	}
 }

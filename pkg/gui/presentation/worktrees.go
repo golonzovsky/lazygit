@@ -22,15 +22,15 @@ func GetWorktreeDisplayString(tr *i18n.TranslationSet, worktree *models.Worktree
 	textStyle := theme.DefaultTextColor
 
 	current := ""
-	currentColor := style.FgCyan
+	currentColor := mutedCyan
 	if worktree.IsCurrent {
 		current = "  *"
-		currentColor = style.FgGreen
+		currentColor = mutedGreen
 	}
 
 	icon := icons.IconForWorktree(false)
 	if worktree.IsPathMissing {
-		textStyle = style.FgRed
+		textStyle = mutedRed
 		icon = icons.IconForWorktree(true)
 	}
 
@@ -47,9 +47,9 @@ func GetWorktreeDisplayString(tr *i18n.TranslationSet, worktree *models.Worktree
 	res = append(res, textStyle.Sprint(name))
 	var branch string
 	if worktree.Branch != "" {
-		branch = style.FgCyan.Sprint(worktree.Branch)
+		branch = mutedCyan.Sprint(worktree.Branch)
 	} else if worktree.Head != "" {
-		branch = style.FgYellow.Sprint("HEAD detached at " + utils.ShortHash(worktree.Head))
+		branch = mutedYellow.Sprint("HEAD detached at " + utils.ShortHash(worktree.Head))
 	}
 	res = append(res, branch+mainWorktreeLabel(tr, worktree))
 	return res

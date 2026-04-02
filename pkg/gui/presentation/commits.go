@@ -12,6 +12,7 @@ import (
 	"github.com/jesseduffield/lazygit/pkg/gui/presentation/authors"
 	"github.com/jesseduffield/lazygit/pkg/gui/presentation/graph"
 	"github.com/jesseduffield/lazygit/pkg/gui/presentation/icons"
+	"github.com/gookit/color"
 	"github.com/jesseduffield/lazygit/pkg/gui/style"
 	"github.com/jesseduffield/lazygit/pkg/theme"
 	"github.com/jesseduffield/lazygit/pkg/utils"
@@ -19,6 +20,15 @@ import (
 	"github.com/samber/lo"
 	"github.com/sasha-s/go-deadlock"
 	"github.com/stefanhaller/git-todo-parser/todo"
+)
+
+var (
+	mutedRed     = style.New().SetFg(style.NewRGBColor(color.Rgb(0xc0, 0x60, 0x60)))
+	mutedGreen   = style.New().SetFg(style.NewRGBColor(color.Rgb(0x52, 0xb7, 0x88)))
+	mutedYellow  = style.New().SetFg(style.NewRGBColor(color.Rgb(0xc0, 0xb0, 0x60)))
+	mutedBlue    = style.New().SetFg(style.NewRGBColor(color.Rgb(0x60, 0x90, 0xc0)))
+	mutedCyan    = style.New().SetFg(style.NewRGBColor(color.Rgb(0x56, 0xb6, 0xc2)))
+	mutedMagenta = style.New().SetFg(style.NewRGBColor(color.Rgb(0xb0, 0x70, 0xb0)))
 )
 
 type pipeSetCacheKey struct {
@@ -378,7 +388,7 @@ func displayCommit(
 
 	descriptionString := ""
 	if fullDescription {
-		descriptionString = style.FgBlue.Sprint(
+		descriptionString = mutedBlue.Sprint(
 			utils.UnixToDateSmart(now, commit.UnixTimestamp, timeFormat, shortTimeFormat),
 		)
 	}
@@ -396,7 +406,7 @@ func displayCommit(
 	tagString := ""
 	if fullDescription {
 		if commit.ExtraInfo != "" {
-			tagString = style.FgMagenta.SetBold().Sprint(commit.ExtraInfo) + " "
+			tagString = mutedMagenta.SetBold().Sprint(commit.ExtraInfo) + " "
 		}
 	} else {
 		if len(commit.Tags) > 0 {
@@ -408,7 +418,7 @@ func displayCommit(
 			commit.Status != models.StatusMerged &&
 			// Don't show branch head on a "pick" todo if the rebase.updateRefs config is on
 			!(commit.IsTODO() && hasRebaseUpdateRefsConfig) {
-			tagString = style.FgCyan.SetBold().Sprint(
+			tagString = mutedCyan.SetBold().Sprint(
 				lo.Ternary(icons.IsIconEnabled(), icons.BRANCH_ICON, "*") + " " + tagString)
 		}
 	}
@@ -423,13 +433,13 @@ func displayCommit(
 
 	mark := ""
 	if commit.Status == models.StatusConflicted {
-		youAreHere := style.FgRed.Sprintf("<-- %s ---", common.Tr.ConflictLabel)
+		youAreHere := mutedRed.Sprintf("<-- %s ---", common.Tr.ConflictLabel)
 		mark = fmt.Sprintf("%s ", youAreHere)
 	} else if isMarkedBaseCommit {
-		rebaseFromHere := style.FgYellow.Sprint(common.Tr.MarkedCommitMarker)
+		rebaseFromHere := mutedYellow.Sprint(common.Tr.MarkedCommitMarker)
 		mark = fmt.Sprintf("%s ", rebaseFromHere)
 	} else if !willBeRebased {
-		willBeRebased := style.FgYellow.Sprint("✓")
+		willBeRebased := mutedYellow.Sprint("✓")
 		mark = fmt.Sprintf("%s ", willBeRebased)
 	}
 
@@ -459,15 +469,15 @@ func getBisectStatusColor(status BisectStatus) style.TextStyle {
 	case BisectStatusNone:
 		return style.FgBlack
 	case BisectStatusNew:
-		return style.FgRed
+		return mutedRed
 	case BisectStatusOld:
-		return style.FgGreen
+		return mutedGreen
 	case BisectStatusSkipped:
-		return style.FgYellow
+		return mutedYellow
 	case BisectStatusCurrent:
-		return style.FgMagenta
+		return mutedMagenta
 	case BisectStatusCandidate:
-		return style.FgBlue
+		return mutedBlue
 	}
 
 	// shouldn't land here
@@ -489,15 +499,15 @@ func getHashColor(
 	hashColor := theme.DefaultTextColor
 	switch commit.Status {
 	case models.StatusUnpushed:
-		hashColor = style.FgRed
+		hashColor = mutedRed
 	case models.StatusPushed:
-		hashColor = style.FgYellow
+		hashColor = mutedYellow
 	case models.StatusMerged:
-		hashColor = style.FgGreen
+		hashColor = mutedGreen
 	case models.StatusRebasing, models.StatusCherryPickingOrReverting, models.StatusConflicted:
-		hashColor = style.FgBlue
+		hashColor = mutedBlue
 	case models.StatusReflog:
-		hashColor = style.FgBlue
+		hashColor = mutedBlue
 	default:
 	}
 
@@ -506,7 +516,7 @@ func getHashColor(
 	} else if cherryPickedCommitHashSet.Includes(commit.Hash()) {
 		hashColor = theme.CherryPickedCommitTextStyle
 	} else if commit.Divergence == models.DivergenceRight && commit.Status != models.StatusMerged {
-		hashColor = style.FgBlue
+		hashColor = mutedBlue
 	}
 
 	return hashColor
@@ -514,19 +524,19 @@ func getHashColor(
 
 func actionColorMap(action todo.TodoCommand, status models.CommitStatus) style.TextStyle {
 	if status == models.StatusConflicted {
-		return style.FgRed
+		return mutedRed
 	}
 
 	switch action {
 	case todo.Pick:
-		return style.FgCyan
+		return mutedCyan
 	case todo.Drop:
-		return style.FgRed
+		return mutedRed
 	case todo.Edit:
-		return style.FgGreen
+		return mutedGreen
 	case todo.Fixup:
-		return style.FgMagenta
+		return mutedMagenta
 	default:
-		return style.FgYellow
+		return mutedYellow
 	}
 }
