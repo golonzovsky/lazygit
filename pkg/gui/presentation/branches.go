@@ -131,9 +131,9 @@ func getBranchDisplayStrings(
 		coloredName = fmt.Sprintf("%s %s", coloredName, branchStatus)
 	}
 
-	recencyColor := style.FgCyan
+	recencyColor := mutedCyan
 	if b.Recency == "  *" {
-		recencyColor = style.FgGreen
+		recencyColor = mutedGreen
 	}
 
 	res := make([]string, 0, 6)
@@ -166,7 +166,7 @@ func getBranchDisplayStrings(
 		}
 		if paddingNeededForDivergence > 0 {
 			coloredName += strings.Repeat(" ", paddingNeededForDivergence)
-			coloredName += style.FgCyan.Sprint(divergence)
+			coloredName += mutedCyan.Sprint(divergence)
 		}
 	}
 	res = append(res, coloredName)
@@ -175,8 +175,8 @@ func getBranchDisplayStrings(
 		res = append(
 			res,
 			fmt.Sprintf("%s %s",
-				style.FgYellow.Sprint(b.UpstreamRemote),
-				style.FgYellow.Sprint(b.UpstreamBranch),
+				mutedYellow.Sprint(b.UpstreamRemote),
+				mutedYellow.Sprint(b.UpstreamBranch),
 			),
 			utils.TruncateWithEllipsis(b.Subject, 60),
 		)
@@ -220,23 +220,23 @@ func BranchStatus(
 ) string {
 	itemOperationStr := ItemOperationToString(itemOperation, tr)
 	if itemOperationStr != "" {
-		return style.FgCyan.Sprintf("%s %s", itemOperationStr, Loader(now, userConfig.Gui.Spinner))
+		return mutedCyan.Sprintf("%s %s", itemOperationStr, Loader(now, userConfig.Gui.Spinner))
 	}
 
 	result := ""
 	if branch.IsTrackingRemote() {
 		if branch.UpstreamGone {
-			result = style.FgRed.Sprint(tr.UpstreamGone)
+			result = mutedRed.Sprint(tr.UpstreamGone)
 		} else if branch.MatchesUpstream() {
-			result = style.FgGreen.Sprint("✓")
+			result = mutedGreen.Sprint("✓")
 		} else if branch.RemoteBranchNotStoredLocally() {
-			result = style.FgMagenta.Sprint("?")
+			result = mutedMagenta.Sprint("?")
 		} else if branch.IsBehindForPull() && branch.IsAheadForPull() {
-			result = style.FgYellow.Sprintf("↓%s↑%s", branch.BehindForPull, branch.AheadForPull)
+			result = mutedYellow.Sprintf("↓%s↑%s", branch.BehindForPull, branch.AheadForPull)
 		} else if branch.IsBehindForPull() {
-			result = style.FgYellow.Sprintf("↓%s", branch.BehindForPull)
+			result = mutedYellow.Sprintf("↓%s", branch.BehindForPull)
 		} else if branch.IsAheadForPull() {
-			result = style.FgYellow.Sprintf("↑%s", branch.AheadForPull)
+			result = mutedYellow.Sprintf("↑%s", branch.AheadForPull)
 		}
 	}
 
@@ -274,11 +274,11 @@ func SetCustomBranches(customBranchColors map[string]string, isRegex bool) {
 func prColor(state string) style.TextStyle {
 	switch state {
 	case "OPEN":
-		return style.FgGreen
+		return mutedGreen
 	case "CLOSED":
-		return style.FgRed
+		return mutedRed
 	case "MERGED":
-		return style.FgMagenta
+		return mutedMagenta
 	case "DRAFT":
 		return style.FgBlackLighter
 	default:

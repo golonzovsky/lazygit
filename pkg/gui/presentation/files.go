@@ -132,9 +132,9 @@ func getFileLine(
 	indentation := strings.Repeat("  ", visualDepth)
 
 	if hasStagedChanges && !hasUnstagedChanges {
-		nameColor = style.FgGreen
+		nameColor = mutedGreen
 	} else if hasStagedChanges {
-		nameColor = style.FgYellow
+		nameColor = mutedYellow
 	} else {
 		nameColor = theme.DefaultTextColor
 	}
@@ -183,7 +183,7 @@ func getFileLine(
 
 func formatFileStatus(file *models.File, restColor style.TextStyle) string {
 	firstChar := file.ShortStatus[0:1]
-	firstCharCl := style.FgGreen
+	firstCharCl := mutedGreen
 	switch firstChar {
 	case "?":
 		firstCharCl = theme.UnstagedChangesColor
@@ -204,14 +204,14 @@ func formatLineChanges(linesAdded, linesDeleted int) string {
 	output := ""
 
 	if linesAdded != 0 {
-		output += style.FgGreen.Sprintf("+%d", linesAdded)
+		output += mutedGreen.Sprintf("+%d", linesAdded)
 	}
 
 	if linesDeleted != 0 {
 		if output != "" {
 			output += " "
 		}
-		output += style.FgRed.Sprintf("-%d", linesDeleted)
+		output += mutedRed.Sprintf("-%d", linesDeleted)
 	}
 
 	return output
@@ -237,9 +237,9 @@ func getCommitFileLine(
 
 	switch status {
 	case patch.WHOLE:
-		nameColor = style.FgGreen
+		nameColor = mutedGreen
 	case patch.PART:
-		nameColor = style.FgYellow
+		nameColor = mutedYellow
 	case patch.UNSELECTED:
 		nameColor = theme.DefaultTextColor
 	}
@@ -285,15 +285,15 @@ func getCommitFileLine(
 func getColorForChangeStatus(changeStatus string) style.TextStyle {
 	switch changeStatus {
 	case "A":
-		return style.FgGreen
+		return mutedGreen
 	case "M", "R":
-		return style.FgYellow
+		return mutedYellow
 	case "D":
 		return theme.UnstagedChangesColor
 	case "C":
-		return style.FgCyan
+		return mutedCyan
 	case "T":
-		return style.FgMagenta
+		return mutedMagenta
 	default:
 		return theme.DefaultTextColor
 	}
